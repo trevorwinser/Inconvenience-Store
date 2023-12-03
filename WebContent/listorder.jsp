@@ -11,6 +11,8 @@
 </head>
 <body>
 
+<%@ include file="auth.jsp"%>
+
 <h1>Order List</h1>
 
 <%
@@ -34,11 +36,11 @@ String pw = "304#sa#pw";
 NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 
 try (Connection con = DriverManager.getConnection(url, uid, pw);) {		
-	Statement stmt = con.createStatement();	
-	// Write query to retrieve all order summary records
 
-	ResultSet rst1 = stmt.executeQuery("SELECT orderId, orderDate, c.customerId, CONCAT(firstName, ' ', lastName), totalAmount FROM ordersummary o JOIN customer c ON o.customerId = c.customerId");
-
+	PreparedStatement ps1 = con.prepareStatement("SELECT orderId, orderDate, c.customerId, CONCAT(firstName, ' ', lastName), totalAmount FROM ordersummary o JOIN customer c ON o.customerId = c.customerId WHERE c.customerId = ?");
+	ps1.setInt(1, (int)session.getAttribute("customerId"));
+	ResultSet rst1 = ps1.executeQuery();
+	
 	out.println("<table border='1'><tr><th>Order Id</th><th>Order Date</th><th>Customer Id</th><th>Customer Name</th><th>Total Amount</th></tr>");
 	while (rst1.next()) {
 		PreparedStatement ps = con.prepareStatement("SELECT productId, quantity, price FROM orderproduct WHERE orderId = ?;");

@@ -36,9 +36,9 @@
 		}
 		img {
 			max-width: 200px;
-    height: 200px;
-    display: block;
-    margin: 0 auto;
+    		height: 200px;
+    		display: block;
+    		margin: 0 auto;
 		}
 		.center {
 			display: flex;

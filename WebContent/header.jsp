@@ -22,10 +22,9 @@
         }
         #top-right {
             position: absolute;
-
             right: 0;
             padding: 10px;
-            text-align: right;
+            text-align: left;
         }
         p {
             margin-top: 0px;
@@ -36,10 +35,13 @@
 <body>
     <div>
     <%
-        String userName = (String) session.getAttribute("authenticatedUser");
-        if (userName != null) {
-            out.println("<div id=\"top-right\"><p><b>Signed in as: "+userName+"</b></p>");
+        String username = (String) session.getAttribute("authenticatedUser");
+        if (username != null) {
+            out.println("<div id=\"top-right\"><p><b>Signed in as: "+username+"</b></p>");
             out.println("<p><b><a href=\"logout.jsp\">Log out</a></b></p></div>");
+        } else {
+            out.println("<div id=\"top-right\"><p><b><a href=\"register.jsp\">Create account</a></b></p>");
+            out.println("<p><b><a href=\"login.jsp\">Log in</a></b></p></div>");
         }
     %>     
     <h1 id="top-middle" align="center"><a href="index.jsp">The Inconvenience Store</a></h1>

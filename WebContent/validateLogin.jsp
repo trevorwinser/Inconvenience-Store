@@ -37,17 +37,17 @@
 
 
 		try (Connection con = DriverManager.getConnection(url, uid, pw)) {
-			PreparedStatement ps = con.prepareStatement("SELECT userid, password FROM customer WHERE userid = ? AND password = ?;");
+			PreparedStatement ps = con.prepareStatement("SELECT userid, password, customerId FROM customer WHERE userid = ? AND password = ?;");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ResultSet rst = ps.executeQuery();
-
+			
 			rst.next();
 
 			// TODO: Check if userId and password match some customer account. If so, set retStr to be the username.
 		
 			retStr = rst.getString(1);
-			
+			session.setAttribute("customerId", rst.getInt(1));
 
 			
 		} 
