@@ -47,8 +47,7 @@
 			// TODO: Check if userId and password match some customer account. If so, set retStr to be the username.
 		
 			retStr = rst.getString(1);
-			session.setAttribute("customerId", rst.getInt(1));
-
+			session.setAttribute("customerId", rst.getInt(3));
 			
 		} 
 		catch (SQLException ex) {

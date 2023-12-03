@@ -6,13 +6,16 @@
 <head>
 <title>Trevor and Ryan's Grocery Order Processing</title>
 <style>
-
+	body {
+	overflow: hidden;
+    font-family: 'Comic Sans MS', cursive;
+	}
 </style>
 </head>
 <body>
 
 <%@ include file="auth.jsp"%>
-
+<%@ include file="header.jsp" %>
 <h1>Order List</h1>
 
 <%
@@ -38,7 +41,7 @@ NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 try (Connection con = DriverManager.getConnection(url, uid, pw);) {		
 
 	PreparedStatement ps1 = con.prepareStatement("SELECT orderId, orderDate, c.customerId, CONCAT(firstName, ' ', lastName), totalAmount FROM ordersummary o JOIN customer c ON o.customerId = c.customerId WHERE c.customerId = ?");
-	ps1.setInt(1, (int)session.getAttribute("customerId"));
+	ps1.setInt(1, (Integer)session.getAttribute("customerId"));
 	ResultSet rst1 = ps1.executeQuery();
 	
 	out.println("<table border='1'><tr><th>Order Id</th><th>Order Date</th><th>Customer Id</th><th>Customer Name</th><th>Total Amount</th></tr>");
