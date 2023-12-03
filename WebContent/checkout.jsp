@@ -1,9 +1,20 @@
 <html>
 <head>
-<title>Ray's Grocery</title>
+<title>Trevor and Ryan's Grocery Order Processing</title>
+<style>
+	body {
+			font-family: 'Comic Sans MS', cursive;
+	}
+    select {
+			font-family: 'Comic Sans MS', cursive;
+	}
+	input {
+			font-family: 'Comic Sans MS', cursive;
+	}
+</style>
 </head>
 <body>
-
+<%@ include file="header.jsp" %>
 <h1>Enter your customer id and password to complete the transaction:</h1>
 
 

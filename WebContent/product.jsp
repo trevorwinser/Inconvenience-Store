@@ -8,6 +8,11 @@
 <head>
 <title>Trevor and Ryan's Grocery - Product Information</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Comic Sans MS', cursive;
+    }
+</style>
 </head>
 <body>
 
@@ -38,13 +43,12 @@ try (Connection con = DriverManager.getConnection(url, uid, pw)) {
 	String cartHref = "addcart.jsp?id="+pid+"&name="+pname+"&price="+price;
     String prodDesc = rst.getString(6);
     
-    out.println("<p style='font-size: 32px;line-height: 0.1'>"+pname+"</p>");
-
+    out.println("<p style='font-size: 32px;line-height: 0.1'>"+pname+"</p><br>");
     if(imgURL != null) 
-    out.println("<img src=\"" + imgURL + "\"></img>");
+    out.println("<img src=\"" + imgURL + "\">");
 
     if(productImage != null)
-    out.println("<img src=\"displayImage.jsp?id=" + pid + "\"></img>");
+    out.println("<img src=\"displayImage.jsp?id=" + pid + "\">");
 
     out.println("<p><b>Description&nbsp</b>"+prodDesc+"</p>");
 

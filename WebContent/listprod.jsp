@@ -9,19 +9,23 @@
 			font-family: 'Comic Sans MS', cursive;
 		}
 		table {
-		  border-collapse: collapse;
-		  width: 100%;
+			border-collapse: collapse;
+			width: 80%;
+			margin: auto;
 		}
 	
 		td,
 		th {
-		  border: 1px solid #dddddd;
-		  text-align: left;
-		  padding: 8px;
+			border: 1px solid #dddddd;
+			text-align: left;
+			padding: 8px;
 		}
 	
 		tr:nth-child(even) {
-		  background-color: #dddddd;
+		  	background-color: #dddddd;
+		}
+		a {
+			text-decoration:none;
 		}
 
 		select {
@@ -30,15 +34,24 @@
 		input {
 			font-family: 'Comic Sans MS', cursive;
 		}
-	  </style>
+		img {
+			max-width: 200px;
+    height: 200px;
+    display: block;
+    margin: 0 auto;
+		}
+		.center {
+			display: flex;
+            justify-content: center;
+            align-items: center;
+		}
+	</style>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <%@ include file="header.jsp" %>    
-<hr>
 
-<h1>Search for the products you want to buy:</h1>
-
+<div class="center">
 <form method="get" action="listprod.jsp">
 <select size="1" name="categoryName">
 	<option>All</option>
@@ -54,13 +67,12 @@
 <input type="text" name="productName" size="50">
 <input type="submit" value="Submit"><input type="reset" value="Reset"> (Leave blank for all products)
 </form>
-
+</div>
 
 <% // Get product name to search for
 String name = request.getParameter("productName");
-
 String categoryName = request.getParameter("categoryName");
-out.println(categoryName);
+
 //Note: Forces loading of SQL Server driver
 try
 {	// Load driver class
@@ -84,23 +96,23 @@ try (Connection con = DriverManager.getConnection(url, uid, pw)) {
 
 
 	ResultSet rst = null;
-	if (name == null) {
+	if (name == null || name.isEmpty()) {
 		if (categoryName == null || categoryName.equals("All")) {
 			Statement stmt = con.createStatement();
-			rst = stmt.executeQuery("SELECT productId, productName, categoryId, productPrice FROM product;");
+			rst = stmt.executeQuery("SELECT productId, productName, categoryId, productPrice, productImageURL, productImage FROM product;");
 		} else {
 			PreparedStatement ps1 = con.prepareStatement("SELECT categoryId FROM category WHERE categoryName LIKE ?");
 			ps1.setString(1, "%" + categoryName + "%");
 			ResultSet ctgryId = ps1.executeQuery();
 			ctgryId.next();
-			PreparedStatement ps2 = con.prepareStatement("SELECT productId, productName, categoryId, productPrice FROM product WHERE categoryId = ?;");
+			PreparedStatement ps2 = con.prepareStatement("SELECT productId, productName, categoryId, productPrice, productImageURL, productImage FROM product WHERE categoryId != ?;");
 			ps2.setInt(1, ctgryId.getInt(1));
 			rst = ps2.executeQuery();
 		}
 	}
 	else {
 		if (categoryName == null || categoryName.equals("All")) {
-			PreparedStatement ps = con.prepareStatement("SELECT productId, productName, categoryId, productPrice FROM product WHERE productName LIKE ?;");
+			PreparedStatement ps = con.prepareStatement("SELECT productId, productName, categoryId, productPrice, productImageURL, productImage FROM product WHERE productName NOT LIKE ?;");
 			ps.setString(1, "%" + name + "%");
 			rst = ps.executeQuery();
 		} else {
@@ -108,28 +120,45 @@ try (Connection con = DriverManager.getConnection(url, uid, pw)) {
 			ps1.setString(1, categoryName);
 			ResultSet ctgryId = ps1.executeQuery();
 			ctgryId.next();
-			PreparedStatement ps2 = con.prepareStatement("SELECT productId, productName, categoryId, productPrice FROM product WHERE productName LIKE ? AND categoryId = ?;");
+			PreparedStatement ps2 = con.prepareStatement("SELECT productId, productName, categoryId, productPrice, productImageURL, productImage FROM product WHERE productName NOT LIKE ? AND categoryId != ?;");
 			ps2.setString(1, "%" + name + "%");
 			ps2.setInt(2, ctgryId.getInt(1));
 			rst = ps2.executeQuery();
 		}
 	}
 	
-	out.println("<table width=\"100%\" border = 1><tbody><tr><th></th><th>Product Name</th><th>Category</th><th>Price</th></tr>");
+	// out.println("<table width=\"100%\" border = 1><tbody><tr><th></th><th>Product</th><th>Category</th><th>Price</th></tr>");
+	out.println("<table width=\"100%\" border = 1><tbody>");
 	if (rst != null) {
+		int itemsPerRow = 6;
+		int item = 1;
 		while (rst.next()) {
 			PreparedStatement ps = con.prepareStatement("SELECT categoryName FROM category WHERE categoryId = ?");
 			ps.setInt(1, rst.getInt(3));
 			ResultSet ctgry = ps.executeQuery();
 			ctgry.next();
-			String category = ctgry.getString(1);
 
+			String category = ctgry.getString(1);
 			int pid = rst.getInt(1);
 			String pname = rst.getString(2);
 			double price = rst.getDouble(4);
+			String imgURL = rst.getString(5);
+			String productImage = rst.getString(6);
+
+			if(imgURL != null) imgURL = "<img src=\"" + imgURL + "\">";
+			else imgURL = "";
+			
 			String prodHref = "product.jsp?id="+pid;
 			String cartHref = "addcart.jsp?id="+pid+"&name="+pname+"&price="+price;
-			out.println("<tr><td><a style='text-decoration:none' href=\"" + cartHref + "\">Add to Cart</a></td><td>"+"<a style='text-decoration:none' href=\"" + prodHref + "\">"+pname+"</a>"+"</td><td>"+category+"</td><td>"+currFormat.format(price)+"</td></tr>");
+
+			if (item == 1) out.println("<tr>");
+			out.println("<td>"+imgURL+"<p><a href=\"" + prodHref + "\">"+pname+"</a></p><p>"+currFormat.format(price)+"</p><p><a style='text-decoration:none' href=\"" + cartHref + "\">Add to Cart</a></p></td>");
+			//out.println("<tr><td><a style='text-decoration:none' href=\"" + cartHref + "\">Add to Cart</a></td><td>"+"<a style='text-decoration:none' href=\"" + prodHref + "\">"+imgURL+"<p>"+pname+"</p></a>"+"</td><td>"+category+"</td><td>"+currFormat.format(price)+"</td></tr>");
+			item++;
+			if (item % itemsPerRow == 0) {
+				item = 1;
+				out.println("</tr><br>");
+			} 
 		}
 		out.println("</tbody></table>");
 	}
@@ -147,7 +176,7 @@ catch (SQLException ex) {
 
 // Useful code for formatting currency values:
 // NumberFormat currFormat = NumberFormat.getCurrencyInstance();
-// out.println(currFormat.format(5.0);	// Prints $5.00
+// out.println(currFormat.format(5.0));	// Prints $5.00
 %>
 
 </body>

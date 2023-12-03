@@ -9,6 +9,12 @@
 <html>
 <head>
 <title>Trevor and Ryan's Grocery Order Processing</title>
+<style>
+	body {
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive;
+    }
+</style>
 </head>
 <body>
 
@@ -75,11 +81,11 @@ try (Connection con = DriverManager.getConnection(url, uid, pw);) {
 
 		pstmt2.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
 		pstmt2.setDouble(2, (Double) session.getAttribute("totalAmount"));
-		pstmt2.setString(3, rst.getString(1));
-		pstmt2.setString(4, rst.getString(2));
-		pstmt2.setString(5, rst.getString(3));
-		pstmt2.setString(6, rst.getString(4));
-		pstmt2.setString(7, rst.getString(5));
+		pstmt2.setString(3, rst.getString(1));	//address
+		pstmt2.setString(4, rst.getString(2));	//city
+		pstmt2.setString(5, rst.getString(3));	//state
+		pstmt2.setString(6, rst.getString(4));	//postalcode
+		pstmt2.setString(7, rst.getString(5));	//country
 		try {
 			pstmt2.setInt(8, Integer.parseInt(custId));
 		} catch (NumberFormatException e) {

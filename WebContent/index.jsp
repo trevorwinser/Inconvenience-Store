@@ -14,9 +14,6 @@
         h2 {
             position: absolute;
         }
-        a {
-            text-decoration:none;
-        }
     </style>
 </head>
 <body>
@@ -34,8 +31,6 @@
 
     <h2 align="center"><a href="admin.jsp">Administrators</a></h2>
 
-    <h2 align="center"><a href="logout.jsp">Log out</a></h2>
-
     <h2 align="center"><a href="showcart.jsp">Show cart</a></h2>
 
     <script>
@@ -43,13 +38,16 @@
     const h2Elements = document.querySelectorAll('h2');
 
     h2Elements.forEach(function(element) {
+        const colors = ['hsl(0, 100%, 64%)','hsl(30, 100%, 64%)','hsl(60, 100%, 64%)','hsl(180, 100%, 64%)','hsl(240, 100%, 64%)','hsl(270, 100%, 64%)','hsl(300, 100%, 64%)'];
+
         const ranX = Math.random() * (window.innerWidth - element.clientWidth - 50);
         const ranY = Math.random() * (window.innerHeight - element.clientHeight - 50);
+        
         element.style.left = ranX + 'px';
         element.style.top = ranY + 'px';
 
-        var speedX = (Math.random() > 0.5 ? 0.5 : -0.5) * (Math.random() * 2 + 1) + 0.5;
-        var speedY = (Math.random() > 0.5 ? 0.5 : -0.5) * (Math.random() * 2 + 1) + 0.5;
+        var speedX = Math.ceil((Math.random() > 0.5 ? 0.5 : -0.5) * 3);
+        var speedY = Math.ceil((Math.random() > 0.5 ? 0.5 : -0.5) * 3);
 
         function move() {
             const rect = element.getBoundingClientRect();
@@ -70,37 +68,26 @@
             requestAnimationFrame(move);
         }
 
+        
         function changeColor() {
-                const randomColor = getRandomColor();
-                element.style.color = randomColor;
-                const anchor = element.querySelector('a');
-                if (anchor) {
-                        anchor.style.color = randomColor;
-                }
+            const randomColor = getRandomColor();
+            element.style.color = randomColor;
+            const anchor = element.querySelector('a');
+            if (anchor) {
+                    anchor.style.color = randomColor;
+            }
         }
 
         function getRandomColor() {
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                        color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
+                return colors[Math.floor(Math.random() * 7)];
         }
 
         move();
+        changeColor();
     });
-	});
+    });
 
-</script>
-
-
-
-<%
-	String userName = (String) session.getAttribute("authenticatedUser");
-	if (userName != null)
-		out.println("<h2 align=\"center\">Signed in as: "+userName+"</h2>");
-%>
+    </script>
 
 </body>
 </html>

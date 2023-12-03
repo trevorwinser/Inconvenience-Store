@@ -8,9 +8,23 @@
 <html>
 <head>
 <title>Your Shopping Cart</title>
+<style>
+	body {
+			font-family: 'Comic Sans MS', cursive;
+	}
+	table {
+		padding-left: 10px;
+	}
+	h1 {
+		padding-left: 10px;
+	}
+	h2 {
+		padding-left: 10px;
+	}
+</style>
 </head>
 <body>
-
+<%@ include file="header.jsp" %>
 <%
 // Get the current list of products
 @SuppressWarnings({"unchecked"})
@@ -30,7 +44,7 @@ else
 
 	double total =0;
 	Iterator<Map.Entry<String, ArrayList<Object>>> iterator = productList.entrySet().iterator();
-	while (iterator.hasNext()) 
+	while (iterator.hasNext())
 	{	Map.Entry<String, ArrayList<Object>> entry = iterator.next();
 		ArrayList<Object> product = (ArrayList<Object>) entry.getValue();
 		if (product.size() < 4)
@@ -42,9 +56,11 @@ else
 		out.print("<tr><td>"+product.get(0)+"</td>");
 		out.print("<td>"+product.get(1)+"</td>");
 
-		out.print("<td align=\"center\">"+product.get(3)+"</td>");
+		
 		Object price = product.get(2);
 		Object itemqty = product.get(3);
+		out.print("<td align=\"center\">"+itemqty+"</td>");
+		
 		double pr = 0;
 		int qty = 0;
 		
@@ -66,7 +82,8 @@ else
 		}		
 
 		out.print("<td align=\"right\">"+currFormat.format(pr)+"</td>");
-		out.print("<td align=\"right\">"+currFormat.format(pr*qty)+"</td></tr>");
+		out.print("<td align=\"right\">"+currFormat.format(pr*qty)+"</td>");
+		out.println("<td><a href=\"removecart.jsp?pid=" + product.get(0) + "\">Remove</a></td>");
 		out.println("</tr>");
 		total = total +pr*qty;
 	}
