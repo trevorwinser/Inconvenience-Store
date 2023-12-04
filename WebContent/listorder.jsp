@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Trevor and Ryan's Grocery Order Processing</title>
+<title>Orders</title>
 <style>
 	body {
 	overflow: hidden;
@@ -41,9 +41,13 @@ NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 try (Connection con = DriverManager.getConnection(url, uid, pw);) {		
 
 	PreparedStatement ps1 = con.prepareStatement("SELECT orderId, orderDate, c.customerId, CONCAT(firstName, ' ', lastName), totalAmount FROM ordersummary o JOIN customer c ON o.customerId = c.customerId WHERE c.customerId = ?");
-	ps1.setInt(1, (Integer)session.getAttribute("customerId"));
+	int custId = (session.getAttribute("customerId") == null) ? -1 : (Integer) session.getAttribute("customerId");
+	ps1.setInt(1, custId);
 	ResultSet rst1 = ps1.executeQuery();
 	
+	out.println("<p>"+session.getAttribute("authenticatedUser")+"</p>");
+
+
 	out.println("<table border='1'><tr><th>Order Id</th><th>Order Date</th><th>Customer Id</th><th>Customer Name</th><th>Total Amount</th></tr>");
 	while (rst1.next()) {
 		PreparedStatement ps = con.prepareStatement("SELECT productId, quantity, price FROM orderproduct WHERE orderId = ?;");

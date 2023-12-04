@@ -10,6 +10,12 @@
             padding: 0;
         }
 
+        h4 {
+            top: 10px;
+            margin: 0px;
+
+        }
+
         #top-middle {
             position: absolute;
             top: 0%;
@@ -26,10 +32,12 @@
             padding: 10px;
             text-align: left;
         }
-        p {
-            margin-top: 0px;
-            margin-bottom: 0px;
+        #top-left {
+            position: absolute;
+            padding: 10px;
+            text-align: left;
         }
+
     </style>
 </head>
 <body>
@@ -37,13 +45,14 @@
     <%
         String username = (String) session.getAttribute("authenticatedUser");
         if (username != null) {
-            out.println("<div id=\"top-right\"><p><b>Signed in as: "+username+"</b></p>");
-            out.println("<p><b><a href=\"logout.jsp\">Log out</a></b></p></div>");
+            out.println("<div id=\"top-right\"><h4>Signed in as: "+username+"</h4>");
+            out.println("<h4><a href=\"logout.jsp\">Log out</a></h3></div>");
         } else {
-            out.println("<div id=\"top-right\"><p><b><a href=\"register.jsp\">Create account</a></b></p>");
-            out.println("<p><b><a href=\"login.jsp\">Log in</a></b></p></div>");
+            out.println("<div id=\"top-right\"><h4><a href=\"register.jsp\">Create account</a></h4>");
+            out.println("<h4><a href=\"login.jsp\">Log in</a></h4></div>");
         }
-    %>     
+    %>
+    <div id="top-left"><h4><a href="showcart.jsp">Cart</a></h4></div>
     <h1 id="top-middle" align="center"><a href="index.jsp">The Inconvenience Store</a></h1>
      
     <br>
@@ -51,4 +60,6 @@
     <br>
     </div>
 </body>
+
+
 
