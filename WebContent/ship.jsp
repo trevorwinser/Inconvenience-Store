@@ -6,6 +6,8 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Date" %>
 <%@ include file="jdbc.jsp" %>
+<%@ include file="header.jsp" %>
+
 
 <html>
 <head>
@@ -13,28 +15,14 @@
 </head>
 <body>
         
-<%@ include file="header.jsp" %>
+
 
 <%
-	// TODO: Get order id
 	String id = request.getParameter("orderId");
 
-	// TODO: Check if valid order id in database
-	String sql1 = "SELECT productId, quantity FROM orderproduct WHERE orderId = ?";
-	try {	// Load driver class
-		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-	}
-	catch (java.lang.ClassNotFoundException e) {
-		out.println("ClassNotFoundException: " +e);
-	}
-	
-	String url = "jdbc:sqlserver://cosc304_sqlserver:1433;DatabaseName=orders;TrustServerCertificate=True";
-	String uid = "sa";
-	String pw = "304#sa#pw";
-	NumberFormat currFormat = NumberFormat.getCurrencyInstance();
-	
-	try (Connection con = DriverManager.getConnection(url, uid, pw);) {	
-		PreparedStatement ps1 = con.prepareStatement(sql1);
+	try {	
+		getConnection();
+		PreparedStatement ps1 = con.prepareStatement("SELECT productId, quantity FROM orderproduct WHERE orderId = ?");
 		ps1.setInt(1, Integer.parseInt(id));
 		ResultSet rst1 = ps1.executeQuery();
 	
@@ -83,6 +71,8 @@
 
 	} catch (SQLException ex) {
 		out.println("SQLException: " + ex);
+	} finally {
+		closeConnection();
 	}
 %>                       				
 

@@ -31,12 +31,8 @@
 				return null;
 
 
-		String url = "jdbc:sqlserver://cosc304_sqlserver:1433;DatabaseName=orders;TrustServerCertificate=True";
-		String uid = "sa";
-		String pw = "304#sa#pw";
-
-
-		try (Connection con = DriverManager.getConnection(url, uid, pw)) {
+		try {
+			getConnection();
 			PreparedStatement ps = con.prepareStatement("SELECT userid, password, customerId FROM customer WHERE userid = ? AND password = ?;");
 			ps.setString(1, username);
 			ps.setString(2, password);

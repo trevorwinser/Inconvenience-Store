@@ -2,7 +2,8 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8"%>
-<%@ include file="jdbc.jsp" %>
+<%@ include file="jdbc.jsp"%>
+<%@ include file="header.jsp"%>
 
 <html>
 <head>
@@ -16,19 +17,13 @@
 </head>
 <body>
 
-<%@ include file="header.jsp" %>
-
 <%
-// Get product name to search for
-// TODO: Retrieve and display info for the product
 String productId = request.getParameter("id");
 
-String url = "jdbc:sqlserver://cosc304_sqlserver:1433;DatabaseName=orders;TrustServerCertificate=True";
-String uid = "sa";
-String pw = "304#sa#pw";
 NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 
-try (Connection con = DriverManager.getConnection(url, uid, pw)) {
+try {
+    getConnection();
 	PreparedStatement ps = con.prepareStatement("SELECT productId, productName, productPrice, productImageURL, productImage, productDesc FROM product WHERE productId = ?;");
 	ps.setInt(1, Integer.parseInt(productId));
 	ResultSet rst = ps.executeQuery();
@@ -63,6 +58,9 @@ try (Connection con = DriverManager.getConnection(url, uid, pw)) {
     catch (SQLException ex) {
         out.println("SQLException: " + ex);
 } 
+finally {
+    closeConnection();
+}
 %>
 
 </body>

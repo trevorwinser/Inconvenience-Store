@@ -15,37 +15,27 @@
 <body>
 
 <%@ include file="auth.jsp"%>
-<%@ include file="header.jsp" %>
+<%@ include file="header.jsp"%>
+<%@ include file="jdbc.jsp"%>
 <h1>Order List</h1>
 
 <%
 
-//Note: Forces loading of SQL Server driver
-try {	// Load driver class
-	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-}
-catch (java.lang.ClassNotFoundException e) {
-	out.println("ClassNotFoundException: " +e);
-}
+
 
 // Useful code for formatting currency values:	
 // NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 // out.println(currFormat.format(5.0));  // Prints $5.00
 
 // Make connection
-String url = "jdbc:sqlserver://cosc304_sqlserver:1433;DatabaseName=orders;TrustServerCertificate=True";
-String uid = "sa";
-String pw = "304#sa#pw";
 NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 
-try (Connection con = DriverManager.getConnection(url, uid, pw);) {		
-
+try {		
+	getConnection();
 	PreparedStatement ps1 = con.prepareStatement("SELECT orderId, orderDate, c.customerId, CONCAT(firstName, ' ', lastName), totalAmount FROM ordersummary o JOIN customer c ON o.customerId = c.customerId WHERE c.customerId = ?");
 	int custId = (session.getAttribute("customerId") == null) ? -1 : (Integer) session.getAttribute("customerId");
 	ps1.setInt(1, custId);
 	ResultSet rst1 = ps1.executeQuery();
-	
-	out.println("<p>"+session.getAttribute("authenticatedUser")+"</p>");
 
 
 	out.println("<table border='1'><tr><th>Order Id</th><th>Order Date</th><th>Customer Id</th><th>Customer Name</th><th>Total Amount</th></tr>");
@@ -74,10 +64,11 @@ try (Connection con = DriverManager.getConnection(url, uid, pw);) {
 			// Write out product information 
 
 	// Close connection
-	con.close();
 }
 catch (SQLException ex) {
 	out.println("SQLException: " + ex);
+} finally {
+	closeConnection();
 }
 
 %>

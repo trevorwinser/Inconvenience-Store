@@ -12,20 +12,12 @@
 <%
 out.print("<h1>Connecting to database.</h1><br><br>");
 
-try
-{	// Load driver class
-    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-}
-catch (java.lang.ClassNotFoundException e)
-{
-    throw new SQLException("ClassNotFoundException: " +e);
-}
-
 String fileName = "/usr/local/tomcat/webapps/shop/ddl/SQLServer_orderdb.ddl";
 
-try ( Connection con = DriverManager.getConnection(urlForLoadData, uid, pw); )
+try
 {      
     // Create statement
+    getConnection();
     Statement stmt = con.createStatement();
     
     Scanner scanner = new Scanner(new File(fileName));
@@ -62,7 +54,10 @@ try ( Connection con = DriverManager.getConnection(urlForLoadData, uid, pw); )
 catch (Exception e)
 {
     out.print(e);
-}  
+}
+finally {
+    closeConnection();
+}
 %>
 </body>
 </html> 

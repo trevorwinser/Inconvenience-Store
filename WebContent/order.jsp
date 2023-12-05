@@ -5,6 +5,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8"%>
+<%@ include file="jdbc.jsp"%>
+<%@ include file="header.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +21,7 @@
 <body>
 
 <% 
-// Get customer id
+
 String custId = request.getParameter("customerId");
 String password = request.getParameter("password");
 @SuppressWarnings({"unchecked"})
@@ -27,17 +29,11 @@ HashMap<String, ArrayList<Object>> productList = (HashMap<String, ArrayList<Obje
 
 NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 
-String url = "jdbc:sqlserver://cosc304_sqlserver:1433;DatabaseName=orders;TrustServerCertificate=True";
-String uid = "sa";
-String pw = "304#sa#pw";
-// Make connection
-try (Connection con = DriverManager.getConnection(url, uid, pw);) {
 
+try {
+	getConnection();
 	PreparedStatement psCustId = con.prepareStatement("SELECT customerId, password FROM customer");
 	ResultSet customers = psCustId.executeQuery();
-
-
-	// Determine if valid customer id was entered
 
 	boolean invalidId = true;
 	boolean invalidPassword = true;
@@ -54,30 +50,24 @@ try (Connection con = DriverManager.getConnection(url, uid, pw);) {
 		} catch (NumberFormatException e){}
 	}
 
-	// Determine if there are products in the shopping cart
-
 	boolean emptyCart = true;
 	if (productList == null) {
 	} else if (!productList.isEmpty()) {
 		emptyCart = false;
 	}
-	// If either are not true, display an error message
+
 	if (emptyCart || invalidId || invalidPassword) {
 		if (emptyCart) out.println("<h1>Your shopping cart is empty!</h1>");
 		else if (invalidId) out.println("<h1>Invalid customer id. Go back to the previous page and try again.</h1>");
 		else out.println("<h1>Incorrect password. go back to the previous page and try again.</h1>");
 	} else {
 
-			// Save order information to database
-
-		String sql = "SELECT address, city, state, postalCode, country, firstName, lastName FROM customer WHERE customerId = ?";
-		PreparedStatement pstmt = con.prepareStatement(sql);
+		PreparedStatement pstmt = con.prepareStatement("SELECT address, city, state, postalCode, country, firstName, lastName FROM customer WHERE customerId = ?");
 		pstmt.setInt(1, Integer.parseInt(custId));
 		ResultSet rst = pstmt.executeQuery();
 		rst.next();
-		String sql2 = "INSERT INTO ordersummary(orderDate, totalAmount, shiptoAddress, shiptoCity, shiptoState, shiptoPostalCode, shiptoCountry, customerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		// Use retrieval of auto-generated keys.
-		PreparedStatement pstmt2 = con.prepareStatement(sql2, Statement.RETURN_GENERATED_KEYS);
+		
+		PreparedStatement pstmt2 = con.prepareStatement("INSERT INTO ordersummary(orderDate, totalAmount, shiptoAddress, shiptoCity, shiptoState, shiptoPostalCode, shiptoCountry, customerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
 		pstmt2.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
 		pstmt2.setDouble(2, (Double) session.getAttribute("totalAmount"));
@@ -97,19 +87,10 @@ try (Connection con = DriverManager.getConnection(url, uid, pw);) {
 		int orderId = keys.getInt(1);
 
 
-
-		// Insert each item into OrderProduct table using OrderId from previous INSERT
-
-		// Update total amount for order record
-
-		// Here is the code to traverse through a HashMap
-		// Each entry in the HashMap is an ArrayList with item 0-id, 1-name, 2-quantity, 3-price
-
 		out.println("<h1>Your Order Summary</h1>");
 		out.println("<table><tr><th>Product Id</th><th>Product Name</th><th>Quantity</th><th>Price</th><th>Subtotal</th></tr>");
 
-		String sql3 = "INSERT INTO orderproduct(orderId,productId,quantity,price) VALUES (?,?,?,?)";
-		PreparedStatement pstmt3 = con.prepareStatement(sql3);
+		PreparedStatement pstmt3 = con.prepareStatement("INSERT INTO orderproduct(orderId,productId,quantity,price) VALUES (?,?,?,?)");
 		Iterator<Map.Entry<String, ArrayList<Object>>> iterator = productList.entrySet().iterator();
 		while (iterator.hasNext()) { 
 			Map.Entry<String, ArrayList<Object>> entry = iterator.next();
@@ -129,21 +110,21 @@ try (Connection con = DriverManager.getConnection(url, uid, pw);) {
 		}
 
 
-		// Print out order summary
-
 		out.println("<tr><td colspan=\"4\" align=\"right\"><b>Order Total</b></td>"
 			+"<td align=\"right\">"+currFormat.format(session.getAttribute("totalAmount"))+"</td></tr>");
 		out.println("</table>");
-		// Clear cart if order placed successfully
+
 		session.setAttribute("productList", null);
 		out.println("<h1>Order completed. Will be shipped soon...</h1>");
 		out.println("<h1>Your order reference number is: "+orderId+"</h1>");
 		out.println("<h1>Shipping to customer: "+custId+" Name: "+rst.getString(6)+" "+rst.getString(7)+"</h1>");
-		con.close();
 	} 
 }
 catch (SQLException ex) {
 	out.println("SQLException: " + ex);
+}
+finally {
+	closeConnection();
 }
 	
 

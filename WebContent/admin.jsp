@@ -10,28 +10,25 @@
 <%@ include file="jdbc.jsp" %>
 
 <%
-// TODO: Write SQL query that prints out total order amount by day
-String sql = "SELECT cast(orderDate as date), SUM(totalAmount) FROM ordersummary GROUP BY cast(orderDate as date) ORDER BY cast(orderDate as date) ASC;";
 
-String url = "jdbc:sqlserver://cosc304_sqlserver:1433;DatabaseName=orders;TrustServerCertificate=True";
-String uid = "sa";
-String pw = "304#sa#pw";
-NumberFormat currFormat = NumberFormat.getCurrencyInstance();
-
-try (Connection con = DriverManager.getConnection(url, uid, pw);) {		
+try {		
+	getConnection();
 	Statement stmt = con.createStatement();	
-	ResultSet rst1 = stmt.executeQuery(sql);
+	ResultSet rst = stmt.executeQuery("SELECT cast(orderDate as date), SUM(totalAmount) FROM ordersummary GROUP BY cast(orderDate as date) ORDER BY cast(orderDate as date) ASC;");
+
+	NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 
     out.println("<h2>Administrator Sales Report by Day</h2>");
 	out.println("<table border='1'><tr><th>Order Date</th><th>Total Order Amount</th></tr>");
-	while (rst1.next()) {
-		out.println("<tr><td>"+rst1.getDate(1)+"</td><td>"+currFormat.format(rst1.getDouble(2))+"</td></tr>");
+	while (rst.next()) {
+		out.println("<tr><td>"+rst.getDate(1)+"</td><td>"+currFormat.format(rst.getDouble(2))+"</td></tr>");
 	}
 		out.println("</table>");
-	con.close();
 }
 catch (SQLException ex) {
 	out.println("SQLException: " + ex);
+} finally {
+	closeConnection();
 }
 
 %>

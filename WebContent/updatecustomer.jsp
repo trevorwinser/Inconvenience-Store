@@ -3,7 +3,7 @@
 
 <%
 if (request.getMethod().equals("POST")) {
-    String sql = "UPDATE customer SET firstName=?, lastName=?, email=?, phonenum=?, address=?, city=?, state=?, postalCode=?, country=? WHERE userid=?";
+    String sql = "UPDATE customer SET firstName=?, lastName=?, email=?, phonenum=?, address=?, city=?, state=?, postalCode=?, country=?, userid=?, password=? WHERE userid=?";
     try (Connection con = DriverManager.getConnection(url, uid, pw);
          PreparedStatement ps = con.prepareStatement(sql);) {
 
@@ -17,6 +17,8 @@ if (request.getMethod().equals("POST")) {
         String state = request.getParameter("state");
         String postalCode = request.getParameter("postalCode");
         String country = request.getParameter("country");
+        String userid = request.getParameter("userid");
+        String password = request.getParameter("password");
 
         // Set parameters for the SQL query
         ps.setString(1, firstName);
@@ -28,8 +30,11 @@ if (request.getMethod().equals("POST")) {
         ps.setString(7, state);
         ps.setString(8, postalCode);
         ps.setString(9, country);
-        ps.setString(10, (String) session.getAttribute("authenticatedUser"));  // assuming username is available from the previous page
+        ps.setString(10, userid);
+        ps.setString(11, password);
+        ps.setString(12, (String) session.getAttribute("authenticatedUser"));  // assuming username is available from the previous page
 
+        session.setAttribute("authenticatedUser", userid);
         // Execute the update query
         int rowsAffected = ps.executeUpdate();
 

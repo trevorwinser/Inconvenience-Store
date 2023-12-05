@@ -49,8 +49,8 @@
 <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<%@ include file="header.jsp" %>    
-
+<%@ include file="header.jsp"%>    
+<%@ include file="jdbc.jsp"%>   
 <div class="center">
 <form method="get" action="listprod.jsp">
 <select size="1" name="categoryName">
@@ -69,31 +69,14 @@
 </form>
 </div>
 
-<% // Get product name to search for
+<%
 String name = request.getParameter("productName");
 String categoryName = request.getParameter("categoryName");
 
-//Note: Forces loading of SQL Server driver
-try
-{	// Load driver class
-	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-}
-catch (java.lang.ClassNotFoundException e)
-{
-	out.println("ClassNotFoundException: " +e);
-}
-
-// Variable 'name' now contains the search string the user entered
-// Use it to build a query and print out the resultset.  Make sure to use PreparedStatement!
-
-// Make the connection
-String url = "jdbc:sqlserver://cosc304_sqlserver:1433;DatabaseName=orders;TrustServerCertificate=True";
-String uid = "sa";
-String pw = "304#sa#pw";
 NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 
-try (Connection con = DriverManager.getConnection(url, uid, pw)) {
-
+try {
+	getConnection();
 
 	ResultSet rst = null;
 	if (name == null || name.isEmpty()) {
@@ -162,12 +145,12 @@ try (Connection con = DriverManager.getConnection(url, uid, pw)) {
 		}
 		out.println("</tbody></table>");
 	}
-	con.close();
-
 }
 catch (SQLException ex) {
 	out.println("SQLException: " + ex);
-} 
+} finally {
+	closeConnection();
+}
 
 
 // For each product create a link of the form

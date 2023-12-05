@@ -1,3 +1,7 @@
+<%@ include file="auth.jsp"%>
+<%@ page import="java.text.NumberFormat" %>
+<%@ include file="jdbc.jsp"%>
+<%@ include file="header.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,28 +24,14 @@
     </style>
 </head>
 <body>
-    <%@ include file="auth.jsp"%>
-    <%@ page import="java.text.NumberFormat" %>
-    <%@ include file="jdbc.jsp" %>
-    <%@ include file="header.jsp" %>
 
     <%
 
     // TODO: Print Customer information
-    String sql = "SELECT customerId,firstName,lastName,email,phonenum,address,city,state,postalCode,country,userid,password FROM customer WHERE userid = ?";
-    try {    // Load driver class
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-    }
-    catch (java.lang.ClassNotFoundException e) {
-        out.println("ClassNotFoundException: " +e);
-    }
 
-    String url = "jdbc:sqlserver://cosc304_sqlserver:1433;DatabaseName=orders;TrustServerCertificate=True";
-    String uid = "sa";
-    String pw = "304#sa#pw";
-
-    try (Connection con = DriverManager.getConnection(url, uid, pw);) {   
-        PreparedStatement ps = con.prepareStatement(sql);
+    try {   
+        getConnection();
+        PreparedStatement ps = con.prepareStatement("SELECT customerId,firstName,lastName,email,phonenum,address,city,state,postalCode,country,userid,password FROM customer WHERE userid = ?");
         ps.setString(1, username);
         ResultSet rst = ps.executeQuery();
         rst.next();
@@ -63,8 +53,11 @@
         out.println("</table>");
         out.println("<p class=\"edit\"><input type=\"submit\" value=\"Save Changes\"></p>");
         out.println("</form>");
+
     } catch (SQLException ex) {
         out.println("SQLException: " + ex);
+    } finally {
+        closeConnection();
     }
 
     // Make sure to close connection

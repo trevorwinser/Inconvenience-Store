@@ -21,7 +21,7 @@
 <%!
 	boolean validateLogin(JspWriter out,HttpServletRequest request, HttpSession session) throws IOException
 	{
-		String username = request.getParameter("username");
+		String username = request.getParameter("userid");
 		String password = request.getParameter("password");
 
 		if (username == null || password == null)
