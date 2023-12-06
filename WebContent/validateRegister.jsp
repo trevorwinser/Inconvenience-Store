@@ -43,7 +43,7 @@
                 session.setAttribute("registerMessage","That username is taken!");
                 return false;
             } else {
-                PreparedStatement ps1 = con.prepareStatement("INSERT INTO customer(userid, password) VALUES (?,?);");
+                PreparedStatement ps1 = con.prepareStatement("INSERT INTO customer(userid, password, accesslevel) VALUES (?, ?, 1);");
                 ps1.setString(1, username);
                 ps1.setString(2, password);
                 ps1.executeUpdate();

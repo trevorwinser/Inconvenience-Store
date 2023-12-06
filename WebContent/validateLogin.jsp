@@ -33,7 +33,7 @@
 
 		try {
 			getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT userid, password, customerId FROM customer WHERE userid = ? AND password = ?;");
+			PreparedStatement ps = con.prepareStatement("SELECT userid, password, customerId, accesslevel FROM customer WHERE userid = ? AND password = ?;");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ResultSet rst = ps.executeQuery();
@@ -44,6 +44,7 @@
 		
 			retStr = rst.getString(1);
 			session.setAttribute("customerId", rst.getInt(3));
+			session.setAttribute("accesslevel", rst.getInt(4));
 			
 		} 
 		catch (SQLException ex) {

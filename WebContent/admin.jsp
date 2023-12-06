@@ -1,38 +1,53 @@
+<%@ include file="auth.jsp"%>
+<%@ include file="header.jsp" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Administrator Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrator Page</title>
+  <style>
+    body {
+		font-family: 'Comic Sans MS', cursive;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+    }
+    h2 {
+      font-family: 'Comic Sans MS', cursive;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .links {
+      display: block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 14px 16px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 18px;
+      margin: 10px auto;
+      width: 40%;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+  </style>
 </head>
 <body>
-
-<%@ include file="auth.jsp"%>
-<%@ page import="java.text.NumberFormat" %>
-<%@ include file="jdbc.jsp" %>
-
-<%
-
-try {		
-	getConnection();
-	Statement stmt = con.createStatement();	
-	ResultSet rst = stmt.executeQuery("SELECT cast(orderDate as date), SUM(totalAmount) FROM ordersummary GROUP BY cast(orderDate as date) ORDER BY cast(orderDate as date) ASC;");
-
-	NumberFormat currFormat = NumberFormat.getCurrencyInstance();
-
-    out.println("<h2>Administrator Sales Report by Day</h2>");
-	out.println("<table border='1'><tr><th>Order Date</th><th>Total Order Amount</th></tr>");
-	while (rst.next()) {
-		out.println("<tr><td>"+rst.getDate(1)+"</td><td>"+currFormat.format(rst.getDouble(2))+"</td></tr>");
-	}
-		out.println("</table>");
-}
-catch (SQLException ex) {
-	out.println("SQLException: " + ex);
-} finally {
-	closeConnection();
-}
-
-%>
-
+  <header>
+    <h1>Administrator Page</h1>
+  </header>
+  <div class="links">
+    <h2><a href="listsalesorders.jsp">Display Sales</a></h2>
+    <h2><a href="listcustomer.jsp">List Customers</a></h2>
+    <h2><a href="updateprod.jsp">Update Product Information</a></h2>
+    <h2><a href="loaddata.jsp">Restore Database</a></h2>
+  </div>
 </body>
 </html>
-

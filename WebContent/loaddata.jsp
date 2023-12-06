@@ -57,6 +57,7 @@ catch (Exception e)
 }
 finally {
     closeConnection();
+    response.sendRedirect("index.jsp");
 }
 %>
 </body>
