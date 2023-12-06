@@ -7,6 +7,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8"%>
 <%@ include file="jdbc.jsp"%>
 <%@ include file="header.jsp"%>
+<%@ include file="auth.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +23,7 @@
 
 <% 
 
-String custId = request.getParameter("customerId");
+int custId = (session.getAttribute("customerId") == null) ? -1 : (Integer) session.getAttribute("customerId");
 String password = request.getParameter("password");
 @SuppressWarnings({"unchecked"})
 HashMap<String, ArrayList<Object>> productList = (HashMap<String, ArrayList<Object>>) session.getAttribute("productList");
@@ -37,17 +38,14 @@ try {
 
 	boolean invalidId = true;
 	boolean invalidPassword = true;
-	if (custId != null && !custId.isEmpty()) {
-		try {
-			int intCustId = Integer.parseInt(custId);
-			while (customers.next()) {
-				if (intCustId == customers.getInt(1)) {
-					invalidId = false;
-					if (password.equals(customers.getString(2))) invalidPassword = false;
-					break;
-				}
+	if (custId != -1) {
+		while (customers.next()) {
+			if (custId == customers.getInt(1)) {
+				invalidId = false;
+				if (password.equals(customers.getString(2))) invalidPassword = false;
+				break;
 			}
-		} catch (NumberFormatException e){}
+		}
 	}
 
 	boolean emptyCart = true;
@@ -58,12 +56,12 @@ try {
 
 	if (emptyCart || invalidId || invalidPassword) {
 		if (emptyCart) out.println("<h1>Your shopping cart is empty!</h1>");
-		else if (invalidId) out.println("<h1>Invalid customer id. Go back to the previous page and try again.</h1>");
+		else if (invalidId) out.println("<h1>Invalid customer id. Try logging in again.</h1>");
 		else out.println("<h1>Incorrect password. go back to the previous page and try again.</h1>");
 	} else {
 
 		PreparedStatement pstmt = con.prepareStatement("SELECT address, city, state, postalCode, country, firstName, lastName FROM customer WHERE customerId = ?");
-		pstmt.setInt(1, Integer.parseInt(custId));
+		pstmt.setInt(1, custId);
 		ResultSet rst = pstmt.executeQuery();
 		rst.next();
 		
@@ -77,7 +75,7 @@ try {
 		pstmt2.setString(6, rst.getString(4));	//postalcode
 		pstmt2.setString(7, rst.getString(5));	//country
 		try {
-			pstmt2.setInt(8, Integer.parseInt(custId));
+			pstmt2.setInt(8, custId);
 		} catch (NumberFormatException e) {
 		}
 		pstmt2.executeUpdate();

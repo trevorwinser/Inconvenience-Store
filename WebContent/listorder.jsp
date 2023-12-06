@@ -6,10 +6,36 @@
 <head>
 <title>Orders</title>
 <style>
-	body {
-	overflow: hidden;
-    font-family: 'Comic Sans MS', cursive;
-	}
+body {
+            font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+        }
+        h2 {
+            font-family: 'Comic Sans MS', cursive;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
 </style>
 </head>
 <body>

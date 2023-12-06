@@ -9,13 +9,10 @@
   <style>
     body {
 		font-family: 'Comic Sans MS', cursive;
-      background-color: #f4f4f4;
       margin: 0;
       padding: 0;
     }
     header {
-      background-color: #333;
-      color: #fff;
       text-align: center;
       padding: 1rem;
     }
@@ -26,7 +23,6 @@
     }
     .links {
       display: block;
-      background-color: #4CAF50;
       color: white;
       padding: 14px 16px;
       text-align: center;
@@ -48,6 +44,7 @@
     <h2><a href="listcustomer.jsp">List Customers</a></h2>
     <h2><a href="updateprod.jsp">Update Product Information</a></h2>
     <h2><a href="loaddata.jsp">Restore Database</a></h2>
+    <h2><a href="shiporder.jsp">Ship Order</a></h2>
   </div>
 </body>
 </html>

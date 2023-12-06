@@ -1,13 +1,17 @@
-<%@ include file="auth.jsp"%>
-
+<%@ page import="java.sql.*" %>
 <%@ include file="jdbc.jsp" %>
 <%@ include file="header.jsp" %>
-<!DOCTYPE html>
-<html lang="en">
+
+<%
+    try {
+        getConnection();
+        Statement statement = con.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM ordersummary");
+%>
+
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer List</title>
+    <title>Order List</title>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive;
@@ -42,23 +46,31 @@
     </style>
 </head>
 <body>
-    <%
-    try {
-        getConnection();
-        out.println("<h2>Customer List</h2>");
-        out.println("<table border='1'<tr><th>Customer Id</th><th>Customer Name</th></tr>");
-        Statement stmt2 = con.createStatement();
-        ResultSet rst2 = stmt2.executeQuery("SELECT customerId, firstName, lastName FROM customer");
+    <h2>Order List</h2>
 
-        while (rst2.next()) {
-            out.println("<tr><td>"+rst2.getInt(1)+"</td><td>"+rst2.getString(2)+" "+rst2.getString(3)+"</td></tr>");
-        } 	
-        out.println("</table>");
+    <table border="1">
+        <tr>
+            <th>Order ID</th>
+            <th>Order Date</th>
+            <th>Total Amount</th>
+        </tr>
+
+        <% while (resultSet.next()) { %>
+            <tr>
+                <td><%= resultSet.getInt("orderId") %></td>
+                <td><%= resultSet.getTimestamp("orderDate") %></td>
+                <td><%= resultSet.getBigDecimal("totalAmount") %></td>
+                <td><a href="ship.jsp?orderId=<%= resultSet.getInt("orderId") %>">Ship</a></td>
+            </tr>
+        <% } %>
+    </table>
+</body>
+</html>
+
+<%
     } catch (SQLException ex) {
         out.println("SQLException: " + ex);
     } finally {
         closeConnection();
     }
-    %>
-</body>
-</html>
+%>

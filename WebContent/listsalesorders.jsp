@@ -11,7 +11,6 @@
     <style>
         body {
             font-family: 'Comic Sans MS', cursive;
-            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
             text-align: center;
