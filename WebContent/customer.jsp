@@ -8,18 +8,37 @@
     <title>Customer Page</title>
     <style>
         body {
-            overflow: hidden;
             font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+        }
+        h2 {
+            font-family: 'Comic Sans MS', cursive;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
         table {
-            margin: auto;
+            width: 40%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
         th {
-            text-align: center;
-            vertical-align: middle;
+            background-color: #333;
+            color: white;
         }
-        .edit {
-            text-align: center;
+        input {
+            font-family: 'Comic Sans MS', cursive;
         }
     </style>
 </head>

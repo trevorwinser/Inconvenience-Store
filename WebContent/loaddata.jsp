@@ -2,6 +2,8 @@
 <%@ page import="java.util.Scanner" %>
 <%@ page import="java.io.File" %>
 <%@ include file="jdbc.jsp" %>
+<%@ include file="authadmin.jsp"%>
+<%@ include file="auth.jsp"%>
 
 <html>
 <head>

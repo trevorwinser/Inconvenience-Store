@@ -1,4 +1,5 @@
 <%@ include file="auth.jsp"%>
+<%@ include file="authadmin.jsp"%>
 <%@ page import="java.text.NumberFormat" %>
 <%@ include file="header.jsp" %>
 <%@ include file="jdbc.jsp" %>
@@ -66,5 +67,6 @@ catch (SQLException ex) {
 }
 
 %>
+<h2><a href="admin.jsp">Back to Main Page</a></h2>
 </body>
 </html>

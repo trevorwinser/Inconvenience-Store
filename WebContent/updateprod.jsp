@@ -1,4 +1,8 @@
 
+<%@ include file="authadmin.jsp"%>
+<%@ include file="auth.jsp"%>
+<%@ include file="header.jsp"%>
+<%@ include file="jdbc.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -61,9 +65,6 @@
 </head>
 <body>
 
-<%@ include file="jdbc.jsp" %>
-<%@ include file="header.jsp" %>
-<%@ include file="auth.jsp" %>
 <%
 try {        
     getConnection();

@@ -14,13 +14,11 @@
         if (rs.next()) {
 
             // Set default values for respective inputs
-            pageContext.setAttribute("email", rs.getString("email"));
-            pageContext.setAttribute("phonenum", rs.getString("phonenum"));
-            pageContext.setAttribute("address", rs.getString("address"));
-            pageContext.setAttribute("city", rs.getString("city"));
-            pageContext.setAttribute("state", rs.getString("state"));
-            pageContext.setAttribute("postalCode", rs.getString("postalCode"));
-            pageContext.setAttribute("country", rs.getString("country"));
+            pageContext.setAttribute("address", (rs.getString("address")==null)?"":rs.getString("address"));
+            pageContext.setAttribute("city", (rs.getString("city")==null)?"":rs.getString("city"));
+            pageContext.setAttribute("state", (rs.getString("state")==null)?"":rs.getString("state"));
+            pageContext.setAttribute("postalCode", (rs.getString("postalCode")==null)?"":rs.getString("postalCode"));
+            pageContext.setAttribute("country", (rs.getString("country")==null)?"":rs.getString("country"));
             
         }
     } catch (SQLException e) {
@@ -43,15 +41,18 @@
         input {
             font-family: 'Comic Sans MS', cursive;
         }
+        .pad {
+            padding-left: 10px;
+        }
     </style>
 </head>
 <body>
+    <div class="pad">
     <h1>Enter Information:</h1>
 
     <form method="get" action="order.jsp">
         <table>
             <tbody>
-                <tr><td>Password:</td><td><input type="password" name="password" size="20"></td></tr>
                 <tr><td>Address:</td><td><input type="text" name="address" size="20" value="<%= (String) pageContext.getAttribute("address") %>"></td></tr>
                 <tr><td>City:</td><td><input type="text" name="city" size="20" value="<%= (String) pageContext.getAttribute("city") %>"></td></tr>
                 <tr><td>State:</td><td><input type="text" name="state" size="20" value="<%= (String) pageContext.getAttribute("state") %>"></td></tr>
@@ -61,5 +62,6 @@
             </tbody>
         </table>
     </form>
+</div>
 </body>
 </html>

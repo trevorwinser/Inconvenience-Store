@@ -1,4 +1,5 @@
 <%@ include file="auth.jsp"%>
+<%@ include file="authadmin.jsp"%>
 <%@ include file="header.jsp" %>
 <!DOCTYPE html>
 <html lang="en">

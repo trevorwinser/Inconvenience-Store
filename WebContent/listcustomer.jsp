@@ -1,5 +1,5 @@
 <%@ include file="auth.jsp"%>
-
+<%@ include file="authadmin.jsp"%>
 <%@ include file="jdbc.jsp" %>
 <%@ include file="header.jsp" %>
 <!DOCTYPE html>
@@ -48,10 +48,16 @@
         out.println("<h2>Customer List</h2>");
         out.println("<table border='1'<tr><th>Customer Id</th><th>Customer Name</th></tr>");
         Statement stmt2 = con.createStatement();
-        ResultSet rst2 = stmt2.executeQuery("SELECT customerId, firstName, lastName FROM customer");
+        ResultSet rst2 = stmt2.executeQuery("SELECT customerId, firstName, lastName, userid FROM customer");
 
         while (rst2.next()) {
-            out.println("<tr><td>"+rst2.getInt(1)+"</td><td>"+rst2.getString(2)+" "+rst2.getString(3)+"</td></tr>");
+            String name = "";
+            if (rst2.getString(2) != null && rst2.getString(3) != null) {
+                name = rst2.getString(2)+" "+rst2.getString(3);
+            } else {
+                name = rst2.getString(4);
+            }
+            out.println("<tr><td>"+rst2.getInt(1)+"</td><td>"+name+"</td></tr>");
         } 	
         out.println("</table>");
     } catch (SQLException ex) {
@@ -60,5 +66,6 @@
         closeConnection();
     }
     %>
+    <h2><a href="admin.jsp">Back to Main Page</a></h2>
 </body>
 </html>

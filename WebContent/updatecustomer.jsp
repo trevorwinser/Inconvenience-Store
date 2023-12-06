@@ -1,6 +1,6 @@
 <%@ page import="java.sql.*, java.io.*" %>
 <%@ include file="jdbc.jsp" %>
-
+<%@ include file="auth.jsp"%>
 <%
 if (request.getMethod().equals("POST")) {
     String sql = "UPDATE customer SET firstName=?, lastName=?, email=?, phonenum=?, address=?, city=?, state=?, postalCode=?, country=?, userid=?, password=? WHERE userid=?";

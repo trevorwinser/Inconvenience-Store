@@ -1,6 +1,8 @@
 <%@ include file="auth.jsp"%>
+<%@ include file="authadmin.jsp"%>
 <%@ page import="java.sql.*" %>
 <%@ include file="jdbc.jsp"%>
+
 
 <%
 try {
@@ -25,6 +27,8 @@ try {
 }
 catch (SQLException ex) {
     out.println("SQLException: " + ex);
+} catch (NumberFormatException ex) {
+    out.println("NumberFormatException: " + ex);
 }
 finally {
     closeConnection();

@@ -53,6 +53,7 @@
             <th>Order ID</th>
             <th>Order Date</th>
             <th>Total Amount</th>
+            <th></th>
         </tr>
 
         <% while (resultSet.next()) { %>
