@@ -3,10 +3,12 @@
 <%@ include file="auth.jsp"%>
 <%
 if (request.getMethod().equals("POST")) {
-    String sql = "UPDATE customer SET firstName=?, lastName=?, email=?, phonenum=?, address=?, city=?, state=?, postalCode=?, country=?, userid=?, password=? WHERE userid=?";
-    try (Connection con = DriverManager.getConnection(url, uid, pw);
-         PreparedStatement ps = con.prepareStatement(sql);) {
+    try {
+        getConnection();
 
+
+        PreparedStatement ps = con.prepareStatement("UPDATE customer SET firstName=?, lastName=?, email=?, phonenum=?, address=?, city=?, state=?, postalCode=?, country=?, userid=?, password=? WHERE userid=?");
+        
         // Retrieve values from the form
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
@@ -46,6 +48,9 @@ if (request.getMethod().equals("POST")) {
         }
     } catch (SQLException ex) {
         out.println("SQLException: " + ex);
+    } finally {
+        closeConnection();
     }
+
 }
 %>

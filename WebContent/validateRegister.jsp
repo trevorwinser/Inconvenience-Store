@@ -35,21 +35,12 @@
         
 
 		try (Connection con = DriverManager.getConnection(url, uid, pw)) {
-			PreparedStatement ps = con.prepareStatement("SELECT userid FROM customer WHERE userid = ?;");
-			ps.setString(1, username);
-			ResultSet rst = ps.executeQuery();
-
-			if (rst.next()) {
-                session.setAttribute("registerMessage","That username is taken!");
-                return false;
-            } else {
-                PreparedStatement ps1 = con.prepareStatement("INSERT INTO customer(userid, password, accesslevel) VALUES (?, ?, 1);");
-                ps1.setString(1, username);
-                ps1.setString(2, password);
-                ps1.executeUpdate();
-                session.removeAttribute("registerMessage");
-                return true;
-            }
+			PreparedStatement ps1 = con.prepareStatement("INSERT INTO customer(userid, password, accesslevel) VALUES (?, ?, 1);");
+			ps1.setString(1, username);
+			ps1.setString(2, password);
+			ps1.executeUpdate();
+			session.removeAttribute("registerMessage");
+			return true;
 			
 		} 
 		catch (SQLException ex) {
