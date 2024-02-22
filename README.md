@@ -27,7 +27,3 @@ To get started with the Inconvenience Web Store, follow these steps:
 - HTML, CSS, JavaScript for front-end development.
 - JavaServer Pages for server-side scripting.
 - MySQL for database management.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
